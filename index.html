@@ -12,6 +12,8 @@
       height: 100vh;
       font-family: Arial, sans-serif;
       text-align: center;
+      overflow: hidden;
+      position: relative;
     }
 
     button {
@@ -21,12 +23,28 @@
       border: none;
       border-radius: 10px;
       cursor: pointer;
+      z-index: 1;
+      position: relative;
     }
 
     #message {
       display: none;
       font-size: 24px;
       color: #d63384;
+      margin-top: 20px;
+    }
+
+    .heart {
+      position: absolute;
+      font-size: 24px;
+      color: #ff4d6d;
+      animation: float 2s linear forwards;
+      pointer-events: none;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0) scale(1); opacity: 1; }
+      100% { transform: translateY(-200px) scale(1.5); opacity: 0; }
     }
   </style>
 </head>
@@ -34,13 +52,30 @@
 
 <div>
   <button onclick="showMessage()">Pour Chloé</button>
-  <div id="message">Je t'aime coeur ❤️</div>
+  <div id="message">je t'aime coeur ❤️</div>
 </div>
 
 <script>
 function showMessage() {
   document.querySelector("button").style.display = "none";
-  document.getElementById("message").style.display = "block";
+  const message = document.getElementById("message");
+  message.style.display = "block";
+
+  // Créer 20 cœurs qui tombent
+  for (let i = 0; i < 20; i++) {
+    const heart = document.createElement('div');
+    heart.className = 'heart';
+    heart.textContent = '❤️';
+    heart.style.left = Math.random() * window.innerWidth + 'px';
+    heart.style.top = window.innerHeight + 'px';
+    heart.style.animationDuration = (2 + Math.random() * 2) + 's';
+    document.body.appendChild(heart);
+
+    // Supprimer le cœur après l'animation
+    setTimeout(() => {
+      heart.remove();
+    }, 4000);
+  }
 }
 </script>
 
