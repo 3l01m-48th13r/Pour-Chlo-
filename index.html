@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Pour Chloé</title>
+  <style>
+    body {
+      background-color: #ffd6e7;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background-color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+    }
+
+    #message {
+      display: none;
+      font-size: 24px;
+      color: #d63384;
+    }
+  </style>
+</head>
+<body>
+
+<div>
+  <button onclick="showMessage()">Pour Chloé</button>
+  <div id="message">Je t'aime coeur ❤️</div>
+</div>
+
+<script>
+function showMessage() {
+  document.querySelector("button").style.display = "none";
+  document.getElementById("message").style.display = "block";
+}
+</script>
+
+</body>
+</html>
