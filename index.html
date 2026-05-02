@@ -1,82 +1,144 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Pour Chloé</title>
-  <style>
-    body {
-      background-color: #ffd6e7;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-      text-align: center;
-      overflow: hidden;
-      position: relative;
-    }
+<meta charset="UTF-8">
+<title>Pour toi ❤️</title>
+<style>
+body {
+  text-align: center;
+  font-family: Arial;
+  background: #ffe6f0;
+  overflow: hidden;
+}
 
-    button {
-      padding: 15px 30px;
-      font-size: 18px;
-      background-color: white;
-      border: none;
-      border-radius: 10px;
-      cursor: pointer;
-      z-index: 1;
-      position: relative;
-    }
+#game {
+  display: none;
+  position: relative;
+  width: 600px;
+  height: 400px;
+  margin: 20px auto;
+  background: white;
+  border: 2px solid pink;
+  overflow: hidden;
+}
 
-    #message {
-      display: none;
-      font-size: 24px;
-      color: #d63384;
-      margin-top: 20px;
-    }
+#player {
+  width: 30px;
+  height: 30px;
+  background: hotpink;
+  position: absolute;
+  top: 50px;
+  left: 50px;
+}
 
-    .heart {
-      position: absolute;
-      font-size: 24px;
-      color: #ff4d6d;
-      animation: float 2s linear forwards;
-      pointer-events: none;
-    }
+.letter {
+  position: absolute;
+  font-size: 24px;
+  font-weight: bold;
+}
 
-    @keyframes float {
-      0% { transform: translateY(0) scale(1); opacity: 1; }
-      100% { transform: translateY(-200px) scale(1.5); opacity: 0; }
-    }
-  </style>
+.heart {
+  position: absolute;
+  color: red;
+  font-size: 20px;
+  animation: fall 3s linear infinite;
+}
+
+@keyframes fall {
+  0% { transform: translateY(-50px); }
+  100% { transform: translateY(450px); }
+}
+</style>
 </head>
+
 <body>
 
-<div>
-  <button onclick="showMessage()">Pour Chloé</button>
-  <div id="message">je t'aime coeur ❤️</div>
+<h1>J'ai un truc pour toi 💌</h1>
+<button onclick="startGame()">Ouvre-moi 💖</button>
+
+<div id="game">
+  <div id="player"></div>
 </div>
 
 <script>
-function showMessage() {
-  document.querySelector("button").style.display = "none";
-  const message = document.getElementById("message");
-  message.style.display = "block";
+const game = document.getElementById("game");
+const player = document.getElementById("player");
 
-  // Créer 20 cœurs qui tombent
-  for (let i = 0; i < 20; i++) {
-    const heart = document.createElement('div');
-    heart.className = 'heart';
-    heart.textContent = '❤️';
-    heart.style.left = Math.random() * window.innerWidth + 'px';
-    heart.style.top = window.innerHeight + 'px';
-    heart.style.animationDuration = (2 + Math.random() * 2) + 's';
+let keys = {};
+let collected = 0;
+
+const letters = ["L", "O", "V", "E"];
+
+function startGame() {
+  game.style.display = "block";
+  spawnLetters();
+}
+
+function spawnLetters() {
+  letters.forEach(letter => {
+    const el = document.createElement("div");
+    el.className = "letter";
+    el.innerText = letter;
+    el.style.left = Math.random() * 550 + "px";
+    el.style.top = Math.random() * 350 + "px";
+    game.appendChild(el);
+  });
+}
+
+document.addEventListener("keydown", e => keys[e.key] = true);
+document.addEventListener("keyup", e => keys[e.key] = false);
+
+function movePlayer() {
+  let top = player.offsetTop;
+  let left = player.offsetLeft;
+
+  if (keys["ArrowUp"]) top -= 3;
+  if (keys["ArrowDown"]) top += 3;
+  if (keys["ArrowLeft"]) left -= 3;
+  if (keys["ArrowRight"]) left += 3;
+
+  player.style.top = top + "px";
+  player.style.left = left + "px";
+
+  checkCollision();
+}
+
+function checkCollision() {
+  const playerRect = player.getBoundingClientRect();
+  const letters = document.querySelectorAll(".letter");
+
+  letters.forEach(letter => {
+    const rect = letter.getBoundingClientRect();
+    if (
+      playerRect.left < rect.right &&
+      playerRect.right > rect.left &&
+      playerRect.top < rect.bottom &&
+      playerRect.bottom > rect.top
+    ) {
+      letter.remove();
+      collected++;
+
+      if (collected === 4) {
+        win();
+      }
+    }
+  });
+}
+
+function win() {
+  alert("LOVE ❤️");
+
+  for (let i = 0; i < 50; i++) {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerText = "❤️";
+    heart.style.left = Math.random() * 600 + "px";
+    heart.style.animationDuration = (Math.random() * 2 + 2) + "s";
     document.body.appendChild(heart);
-
-    // Supprimer le cœur après l'animation
-    setTimeout(() => {
-      heart.remove();
-    }, 4000);
   }
 }
+
+setInterval(movePlayer, 16);
 </script>
 
 </body>
